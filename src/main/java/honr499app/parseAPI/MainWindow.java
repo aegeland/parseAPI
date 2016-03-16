@@ -479,14 +479,16 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				double lat_value = Double.parseDouble(lat_spinner_m.getValue().toString());
 				double lng_value = Double.parseDouble(lng_spinner_m.getValue().toString());
-				String plotDirection = plotDirectionComboBox.getSelectedItem().toString();
+				Enum<Direction> plotDirection = (Enum<Direction>) plotDirectionComboBox.getSelectedItem();
 				double space = Double.parseDouble(space_spinner_m.getValue().toString());
 				double lat_variation = Double.parseDouble(latitude_variation_spinner_m.getValue().toString());
 				double lng_variation = Double.parseDouble(longitude_variation_spinner_m.getValue().toString());
 				double temp = Double.parseDouble(temp_spinner_m.getValue().toString());
 				double temp_variation = Double.parseDouble(temp_variation_spinner_m.getValue().toString());
 				NumberFormat formatter = new DecimalFormat("#0.0000000");
+				System.out.println(space);
 
+				double incrementSpacing = 0;
 				for(int a = 0; a < Integer.parseInt(spinner_num_points_m.getValue().toString()); a++){
 					if(space < 0.0000001){
 						break;
@@ -494,16 +496,46 @@ public class MainWindow {
 						if(lat_variation != 0){
 							Random r = new Random();
 							double random_lat_val = (lat_value - lat_variation) + ((lat_value + lat_variation) - (lat_value - lat_variation)) * r.nextDouble();
+							if(plotDirection.equals(Direction.NORTH)){
+								random_lat_val = random_lat_val + incrementSpacing;
+							}else if(plotDirection.equals(Direction.SOUTH)){
+								random_lat_val = random_lat_val - incrementSpacing;
+							}
 							System.out.println(round(random_lat_val,7));
+						}else{
+							double lat_val = 0;
+							if(plotDirection.equals(Direction.NORTH)){
+								lat_val = lat_value + incrementSpacing;
+							}else if(plotDirection.equals(Direction.SOUTH)){
+								lat_val = lat_value - incrementSpacing;
+							}else{
+								lat_val = lat_value;
+							}
+							System.out.println(round(lat_val,7));
 						}
 
 						if(lng_variation != 0){
 							Random r = new Random();
 							double random_lng_val = (lng_value - lng_variation) + ((lng_value + lng_variation) - (lng_value - lng_variation)) * r.nextDouble();
+							if(plotDirection.equals(Direction.EAST)){
+								random_lng_val = random_lng_val + incrementSpacing;
+							}else if(plotDirection.equals(Direction.WEST)){
+								random_lng_val = random_lng_val - incrementSpacing;
+							}
 							System.out.println(round(random_lng_val,7));
+						}else{
+							double lng_val = 0;
+							if(plotDirection.equals(Direction.EAST)){
+								lng_val = lng_value + incrementSpacing;
+							}else if(plotDirection.equals(Direction.WEST)){
+								lng_val = lng_value - incrementSpacing;
+							}else{
+								lng_val = lng_value;
+							}
+							System.out.println(round(lng_val,7));
 						}
 					}
-
+					incrementSpacing += space;
 				}
 				//handleData.plotPoint(comboBoxUserID.getSelectedItem().toString(), lat_spinner.getValue().toString(), lng_spinner.getValue().toString(), temp_spinner.getValue().toString());
 			}
