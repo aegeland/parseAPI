@@ -483,10 +483,12 @@ public class MainWindow {
 				double space = Double.parseDouble(space_spinner_m.getValue().toString());
 				double lat_variation = Double.parseDouble(latitude_variation_spinner_m.getValue().toString());
 				double lng_variation = Double.parseDouble(longitude_variation_spinner_m.getValue().toString());
-				double temp = Double.parseDouble(temp_spinner_m.getValue().toString());
+				double temp_value = Double.parseDouble(temp_spinner_m.getValue().toString());
 				double temp_variation = Double.parseDouble(temp_variation_spinner_m.getValue().toString());
 				NumberFormat formatter = new DecimalFormat("#0.0000000");
-				System.out.println(space);
+				double finalLatVal = 0;
+				double finalLngVal = 0;
+				double finalTmpVal = 0;
 
 				double incrementSpacing = 0;
 				for(int a = 0; a < Integer.parseInt(spinner_num_points_m.getValue().toString()); a++){
@@ -501,7 +503,8 @@ public class MainWindow {
 							}else if(plotDirection.equals(Direction.SOUTH)){
 								random_lat_val = random_lat_val - incrementSpacing;
 							}
-							System.out.println(round(random_lat_val,7));
+							//System.out.println(round(random_lat_val,7));
+							finalLatVal = round(random_lat_val,7);
 						}else{
 							double lat_val = 0;
 							if(plotDirection.equals(Direction.NORTH)){
@@ -511,7 +514,8 @@ public class MainWindow {
 							}else{
 								lat_val = lat_value;
 							}
-							System.out.println(round(lat_val,7));
+							//System.out.println(round(lat_val,7));
+							finalLatVal = round(lat_val,7);
 						}
 
 						if(lng_variation != 0){
@@ -522,7 +526,8 @@ public class MainWindow {
 							}else if(plotDirection.equals(Direction.WEST)){
 								random_lng_val = random_lng_val - incrementSpacing;
 							}
-							System.out.println(round(random_lng_val,7));
+							finalLngVal = round(random_lng_val,7);
+							//System.out.println(round(random_lng_val,7));
 						}else{
 							double lng_val = 0;
 							if(plotDirection.equals(Direction.EAST)){
@@ -532,12 +537,22 @@ public class MainWindow {
 							}else{
 								lng_val = lng_value;
 							}
-							System.out.println(round(lng_val,7));
+							finalLngVal = round(lng_val,7);
+							//System.out.println(round(lng_val,7));
+						}
+						
+						if(temp_variation !=0 ){
+							Random r = new Random();
+							double random_tmp_val = (temp_value - temp_variation) + ((temp_value + temp_variation) - (temp_value - temp_variation)) * r.nextDouble();
+							System.out.println(round(random_tmp_val,1));
+							finalTmpVal = round(random_tmp_val,1);
+						}else{
+							finalTmpVal = round(temp_value,1);
 						}
 					}
 					incrementSpacing += space;
+					handleData.plotPoint(comboBoxUserID.getSelectedItem().toString(), Double.toString(finalLatVal), Double.toString(finalLngVal), Double.toString(finalTmpVal));
 				}
-				//handleData.plotPoint(comboBoxUserID.getSelectedItem().toString(), lat_spinner.getValue().toString(), lng_spinner.getValue().toString(), temp_spinner.getValue().toString());
 			}
 		});
 		GridBagConstraints gbc_btnPlotPoints = new GridBagConstraints();
